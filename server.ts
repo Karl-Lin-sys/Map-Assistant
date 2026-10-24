@@ -1,3 +1,4 @@
+import { localApiOnly } from './local-api-guard.mjs';
 import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
@@ -5,6 +6,7 @@ import { GoogleGenAI, Type, FunctionDeclaration } from '@google/genai';
 
 async function startServer() {
   const app = express();
+app.use('/api', localApiOnly(() => PORT));
   const PORT = 3000;
 
   app.use(express.json());
@@ -121,7 +123,7 @@ CURRENT MAP VIEWPORT: Lat ${currentViewport?.lat}, Lng ${currentViewport?.lng}, 
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  app.listen(PORT, '127.0.0.1', () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
 }
